@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>V5 Timer</title>
+	<link rel="stylesheet" href="milligram.min.css">
+</head>
+<body>
+
+	<!-- 
+	   
+	  Esta es una aplicacion sencilla de una pagina 
+	  usando el full stack y 
+
+	 -->
+
+	<style>		
+			#nav {
+				height: 80px;
+				text-align: left;
+				padding: 20px 10px;
+				background-color: #6d119bf2;
+				width: 500px;
+				border-bottom-left-radius: 5px;
+				border-bottom-right-radius: 5px;
+				display: flex;
+				color : #fff;
+			}
+
+
+                #tiempo {
+					border : 1px solid #000;
+					margin :  10px 0 10px 0;
+					padding: 15px;
+					height: 80px;
+					border-radius: 10px;
+					position: relative;
+					width: 465px;
+				}
+
+
+               #list_box {
+				background: #6d119bf2;
+				padding: 20px;
+				min-height: 300px;
+				width: 500px;
+				position: relative;
+				float: left;
+				border-radius: 4px;
+				text-align: left;
+				text-shadow: 1px 1px #444;
+				color  : #fff !important;
+			   }
+
+			   #creditos {
+				   margin-left: 6px;
+				   position: relative;
+				   top: 5px;
+			   }
+
+	</style>
+
+
+ <div class="container">
+	 <div id="nav" class="row">
+		<h3>Alkis Timer</h3>
+	 </div>
+ </div>
+
+
+
+   <!-- los contadores -->
+	 <div class="container">
+		 <div id="tiempo" class="row">
+			  <h2><span class="minutos">0</span> : <span class="segundos">0</span> </h2>
+		 </div>
+	 </div>
+
+	 <!-- los controladores -->
+	 <div class="container">
+
+		  <div class="row">
+			   <a href="#" id="add" style=" margin-left: 12px;" class="button button-outline">Agregar link</a>
+			   <button id="lanzar" style=" margin-left: 12px;" class="button" type="button">Lanzar</button>
+               <span id="creditos"> <em>Made by</em>  <strong>Alki</strong></span>	
+			</div>
+
+		<div class="row">
+			<div class="column">
+				<input type="text" class="" value="" placeholder="link">
+			</div>
+			<div class="column column-30"></div>
+		</div>
+
+		
+	</div>
+
+<!--  -->
+	 <!-- las lsiat de reprodicion -->
+	 <div id="list_box" class="container">
+	    	<h3>Lista de reproduccion</h3>
+			 <ol>
+			 </ol>
+	 </div>
+
+	  
+	 <script>
+	  
+	  
+	  //Objeto con los links a ejecutar
+	  let data = {
+		  arr : [],
+	    cuenta : 0
+	  };
+
+	   // hokemaos los elemnto princicpales que mas necesitasmo
+	   let doc      = document;
+	   let input    = doc.querySelector('input');
+	   let ol       = doc.querySelector('ol');
+	   let contador = doc.querySelector('h2');
+
+	   // hooks spans
+	   let hSecs =  contador.querySelector('span.segundos'); // hokemaos segundos
+	   let hMins =  contador.querySelector('span.minutos'); // hokemaos segundos
+
+	   // con controles
+	   let lanzar = doc.getElementById('lanzar');
+	   let   add  = doc.getElementById('add');
+	   
+	   // la funcion para actualizar la lista y agregar al array
+	   add.addEventListener('click', function(e){
+          // vewmos is el inpu tiene algo o no es un link
+		  switch(input.value.trim()) {
+                case undefined:
+				case '':
+				   input.style.border = '1px solid red';
+				   e.preventDefault(); // prevenimos
+				break;
+				default:
+				 let li         = doc.createElement('li');  //cxreamos
+			   	 let contenido  = doc.createTextNode(input.value.trim());  //el nodod de texto
+				 ol.appendChild(li).appendChild(contenido);   // agregamos		
+				 data.arr.push(input.value); // agregasmo el contenido del link al array
+				 input.value = ''; // limpiamos el valor del input
+				 input.style.border = '1px solid #6d119bf2';
+		  }
+	   });
+	   
+	   	  // Las contradores  
+		  let segundos = 1; 
+		  let minutos  = 0;
+
+	    // //
+	   lanzar.addEventListener('click', (e) => {
+
+		   	// hacemos un respanldo del aray actual
+		let buffer = data;
+        
+         // si el buffer tiene alo en su array
+		switch(buffer.arr.length) {
+			case 0:
+                e.preventDefault();  // prevenimos
+			break;
+			default:
+					// el inmtervalo minutero
+					var setinterval = 	setInterval(() => {
+						// equalizamos en el primer intrevalo
+						hSecs.textContent = segundos;
+						hMins.textContent = minutos;
+						// el swith dfe los segundos
+							switch(segundos){
+								case  parseInt(60):
+									segundos = 1;   // resetasmo
+									hSecs.textContent = parseInt(0); // equalizamos
+									minutos++;
+									hMins.textContent = minutos; // agregamos una a mintos y al contenido
+										// en caso de 5 minutos pasados
+								break;	
+								default:
+										segundos++; /// add to seconds				
+										switch( minutos)
+										{
+												case 5: // en caso ed 5 minutos
+												// si tenemos algo en el arra deñl objeto
+														if( buffer.arr.length !== 0)
+														{
+															buffer.cuenta++; // subimos un a l cuenta
+															// abrimos y quitmaos el priom,
+															window.open( buffer.arr.splice(0,1),  '_blank');
+															minutos = 0;  // resetamos
+														} else {
+															clearInterval(setinterval); // quitamo intervalo
+														}
+												break;
+										}
+								} // fin del swtich
+					}, 1000);  // fin del intervalo
+		}
+		// fin del switch
+    
+		
+			// el intervalo
+	   });
+
+	 
+	 </script>
+	
+</body>
+</html>
