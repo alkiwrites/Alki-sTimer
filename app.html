@@ -1,20 +1,22 @@
+<!-- aplicacion simple para parsear link de nuevo videos en el navegador a partir 
+de un lista de link predispuesto epor el autor , y con notificaciones 
+adecuadas.
+
+Autor: sergio aurelio vivas.
+fecha : 15/01/2020.
+Lugar : España. 
+Licensia : MIT.
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>V5 Timer</title>
+	<title>Alki's Timer</title>
 	<link rel="stylesheet" href="milligram.min.css">
 </head>
 <body>
 
-	<!-- 
-	   
-	  Esta es una aplicacion sencilla de una pagina 
-	  usando el full stack y 
-
-	 -->
-
+	<!-- Esta es una aplicacion sencilla de una pagina usando el full stack y -->
 	<style>		
 			#nav {
 				height: 80px;
@@ -55,20 +57,28 @@
 
 			   #creditos {
 				   margin-left: 6px;
+				   text-align: center;
 				   position: relative;
+				   padding: 0;
+				   height: 30px;
+				   width: 170px;
 				   top: 5px;
+				   border-radius: 5px;
+				   border : 1px solid #000;
 			   }
+                 .check {
+					border : 1 px solid #000;
+				 }
 
 	</style>
 
 
- <div class="container">
-	 <div id="nav" class="row">
-		<h3>Alkis Timer</h3>
-	 </div>
- </div>
-
-
+		 <!-- 7l navegacions -->
+		<nav class="container">
+			<div id="nav" class="row">
+				<h3>Alkis Timer</h3>
+			</div>
+		</nav>
 
    <!-- los contadores -->
 	 <div class="container">
@@ -83,7 +93,7 @@
 		  <div class="row">
 			   <a href="#" id="add" style=" margin-left: 12px;" class="button button-outline">Agregar link</a>
 			   <button id="lanzar" style=" margin-left: 12px;" class="button" type="button">Lanzar</button>
-               <span id="creditos"> <em>Made by</em>  <strong>Alki</strong></span>	
+               <span id="creditos"> <em>Made by</em><strong>Alki</strong></span>	
 			</div>
 
 		<div class="row">
@@ -106,13 +116,12 @@
 
 	  
 	 <script>
-	  
-	  
 	  //Objeto con los links a ejecutar
 	  let data = {
-		  arr : [],
-	    cuenta : 0
-	  };
+		  arr  :  [],
+	    cuenta :   0,
+		hook   :  []
+ 	  };
 
 	   // hokemaos los elemnto princicpales que mas necesitasmo
 	   let doc      = document;
@@ -138,12 +147,13 @@
 				   e.preventDefault(); // prevenimos
 				break;
 				default:
-				 let li         = doc.createElement('li');  //cxreamos
-			   	 let contenido  = doc.createTextNode(input.value.trim());  //el nodod de texto
-				 ol.appendChild(li).appendChild(contenido);   // agregamos		
-				 data.arr.push(input.value); // agregasmo el contenido del link al array
-				 input.value = ''; // limpiamos el valor del input
-				 input.style.border = '1px solid #6d119bf2';
+					let li         = doc.createElement('li');  //creamos
+					let contenido  = doc.createTextNode(input.value.trim());  //el nodod de texto
+					data.arr.push(input.value); //agregamos al arra de la data					
+					data.hook.push(li); // empujamos el elemento li.
+					ol.appendChild(li).appendChild(contenido);   // agregamos		
+					input.value = ''; // limpiamos el valor del input
+					input.style.border = '1px solid red';  //
 		  }
 	   });
 	   
@@ -151,14 +161,14 @@
 		  let segundos = 1; 
 		  let minutos  = 0;
 
-	    // //
+       // el triger del event listener
 	   lanzar.addEventListener('click', (e) => {
 
-		   	// hacemos un respanldo del aray actual
-		let buffer = data;
-        
+        //e l contador
+		let  x = 0;	
+		  	
          // si el buffer tiene alo en su array
-		switch(buffer.arr.length) {
+		switch(data.arr.length) {
 			case 0:
                 e.preventDefault();  // prevenimos
 			break;
@@ -170,41 +180,38 @@
 						hMins.textContent = minutos;
 						// el swith dfe los segundos
 							switch(segundos){
-								case  parseInt(60):
-									segundos = 1;   // resetasmo
-									hSecs.textContent = parseInt(0); // equalizamos
-									minutos++;
-									hMins.textContent = minutos; // agregamos una a mintos y al contenido
-										// en caso de 5 minutos pasados
+								case  parseInt(60): // al minuto
+									segundos = 1;                    // set
+									hSecs.textContent = '0'; // set 
+									hMins.textContent = minutos++; // add and set
 								break;	
 								default:
 										segundos++; /// add to seconds				
 										switch( minutos)
 										{
-												case 5: // en caso ed 5 minutos
-												// si tenemos algo en el arra deñl objeto
-														if( buffer.arr.length !== 0)
+												    case 5: // en caso de ser cinco minutos
+												        // si tenemos algo el arrayd e objeto.
+														if( data.arr.length !== 0)
 														{
-															buffer.cuenta++; // subimos un a l cuenta
-															// abrimos y quitmaos el priom,
-															window.open( buffer.arr.splice(0,1),  '_blank');
+															data.hook[x++].style.borderBottom  = '1px solid #000'; // cambiamos estilo
+															window.open( data.arr.splice(0,1),  '_blank'); // abrimos  y eliminamos
+															data.cuenta++; //a gregamos												
 															minutos = 0;  // resetamos
+															e.preventDefault();
 														} else {
-															clearInterval(setinterval); // quitamo intervalo
+															// equzlizamos
+															hSecs.textContent = '0';
+															hMins.textContent = '0';
+															clearInterval(setinterval); //stop intervalo
 														}
-												break;
-										}
+												    break;
+										} // fin del inner swith
 								} // fin del swtich
 					}, 1000);  // fin del intervalo
-		}
-		// fin del switch
-    
-		
-			// el intervalo
+		    }
+		    // fin del switch
 	   });
-
-	 
-	 </script>
-	
+	   // fin del 
+	 </script>	
 </body>
 </html>
